@@ -154,6 +154,46 @@ function validateFields(form, values, rules) {
   return isValid;
 }
 
+ const form = document.getElementById("contact-form");
+  const successBox = document.querySelector(".form-success");
+  const resetBtn = document.querySelector(".form-success-reset");
+  const submitError = document.querySelector(".form-submit-error");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    submitError.textContent = "";
+
+    const formData = new FormData(form);
+    const object = Object.fromEntries(formData.entries());
+    const json = JSON.stringify(object);
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: json
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        form.reset();
+        successBox.classList.add("visible");
+      } else {
+        submitError.textContent = result.message || "Something went wrong.";
+      }
+    } catch (error) {
+      submitError.textContent = "Network error. Please try again.";
+    }
+  });
+
+  resetBtn.addEventListener("click", function () {
+    successBox.classList.remove("visible");
+  });
+
 /* -----------------------------
    Supabase submission
    ----------------------------- */
@@ -180,3 +220,4 @@ async function submitToSupabase(values) {
   if (error) throw error;
   return payload;
 }
+
