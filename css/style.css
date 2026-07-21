@@ -908,6 +908,11 @@ textarea:focus-visible {
   color: var(--color-accent-teal);
 }
 
+.address {
+ font-size: 0.8rem;
+  color: rgba(255,255,255,0.85);
+  transition: color 0.2s ease;
+}
 .footer-bottom {
   display: flex;
   align-items: center;
